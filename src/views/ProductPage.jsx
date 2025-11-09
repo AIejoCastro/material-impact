@@ -46,11 +46,14 @@ function ProductPage({ product }) {
         </div>
         <motion.div
           className="product-hero__visual"
-          initial={{ opacity: 0, scale: 0.85 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2, duration: 0.8, ease: 'easeOut' }}
         >
-          <ProductCanvas slug={product.slug} />
+          <div className="product-hero__visual-scene">
+            <ProductCanvas slug={product.slug} palette={product.palette} />
+            <div className="product-hero__visual-gradient" />
+          </div>
         </motion.div>
       </motion.div>
 

@@ -1,9 +1,27 @@
+# Dependencies
 node_modules/
+.pnp.*
+
+# Build output
 dist/
-.DS_Store
-*.log
+build/
+
+# Logs
 npm-debug.log*
-pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment files
+.env
+.env.*
+
+# MacOS
+.DS_Store
 

@@ -91,19 +91,41 @@
 
 .product-hero__visual {
   position: relative;
-  min-height: 340px;
+  min-height: 380px;
   border-radius: 1.8rem;
   overflow: hidden;
   background: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.18),
-    rgba(255, 255, 255, 0.02)
-  );
+      circle at 25% 25%,
+      rgba(255, 255, 255, 0.16),
+      rgba(255, 255, 255, 0.02) 60%
+    ),
+    rgba(9, 10, 26, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 60px rgba(255, 255, 255, 0.05);
 }
 
-.product-hero__visual canvas {
+.product-hero__visual-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.product-hero__visual-scene canvas {
   width: 100%;
   height: 100%;
+}
+
+.product-hero__visual-gradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 70% 30%,
+    rgba(255, 255, 255, 0.18),
+    transparent 55%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 .product-details {

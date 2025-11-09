@@ -1,4 +1,3 @@
-
 import { Canvas } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, Sphere, Torus, Points, PointMaterial } from '@react-three/drei';
 import { useMemo } from 'react';
@@ -31,8 +30,8 @@ function ParticleHalo({ color }) {
   );
 }
 
-function ProductCanvas({ slug }) {
-  const palette = PALETTES[slug] ?? PALETTES.iphone;
+function ProductCanvas({ slug, palette }) {
+  const colors = palette ?? PALETTES[slug] ?? PALETTES.iphone;
 
   return (
     <Canvas camera={{ position: [0, 0.5, 4], fov: 55 }}>
@@ -42,7 +41,7 @@ function ProductCanvas({ slug }) {
       <Float speed={1.8} rotationIntensity={0.6} floatIntensity={0.4}>
         <Sphere args={[1, 64, 64]} scale={[1.25, 1.15, 1.35]}>
           <MeshDistortMaterial
-            color={palette.base}
+            color={colors.base}
             roughness={0.15}
             metalness={0.3}
             distort={0.35}
@@ -53,8 +52,8 @@ function ProductCanvas({ slug }) {
       <Float position={[0, -0.4, 0]} speed={1.2} rotationIntensity={0.4} floatIntensity={0.3}>
         <Torus args={[1.8, 0.08, 32, 200]} rotation={[Math.PI / 2, 0, 0]}>
           <meshStandardMaterial
-            color={palette.secondary}
-            emissive={palette.secondary}
+            color={colors.secondary}
+            emissive={colors.secondary}
             emissiveIntensity={0.35}
             metalness={1}
             roughness={0.25}
@@ -64,17 +63,18 @@ function ProductCanvas({ slug }) {
       <Float position={[0, 0.9, 0]} speed={2.1} rotationIntensity={0.5} floatIntensity={0.25}>
         <Torus args={[0.95, 0.06, 32, 160]}>
           <meshStandardMaterial
-            color={palette.accent}
-            emissive={palette.accent}
+            color={colors.accent}
+            emissive={colors.accent}
             emissiveIntensity={0.4}
             metalness={1}
             roughness={0.2}
           />
         </Torus>
       </Float>
-      <ParticleHalo color={palette.accent} />
+      <ParticleHalo color={colors.accent} />
     </Canvas>
   );
 }
 
 export default ProductCanvas;
+
