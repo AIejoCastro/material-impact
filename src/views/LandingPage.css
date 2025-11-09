@@ -50,7 +50,7 @@
   padding: 0;
   backdrop-filter: blur(16px);
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
-  min-height: 420px;
+  min-height: clamp(340px, 58vh, 420px);
   display: flex;
   flex-direction: column;
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -137,8 +137,21 @@
     padding: 7rem 6vw 4rem;
   }
 
+  .landing-card {
+    border-radius: 1.3rem;
+    min-height: clamp(320px, 70vh, 400px);
+  }
+
+  .landing-card__content {
+    padding: 1.9rem 1.9rem 1.4rem;
+  }
+
   .landing-card__stats {
     grid-template-columns: 1fr;
+  }
+
+  .landing-card__cta {
+    margin: auto 1.9rem 1.8rem 1.9rem;
   }
 }
 
