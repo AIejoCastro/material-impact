@@ -11,6 +11,13 @@
   backdrop-filter: blur(16px);
 }
 
+.nav-leading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
 .nav-brand {
   font-weight: 800;
   font-size: 1.1rem;
@@ -23,6 +30,34 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+}
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(9, 10, 26, 0.65);
+  color: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.nav-toggle__indicator {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.nav-toggle:hover,
+.nav-toggle:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--color-white);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .nav-link {
@@ -66,11 +101,6 @@
 }
 
 @media (max-width: 960px) {
-  .nav-bar {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
   .nav-links {
     flex-wrap: wrap;
     justify-content: center;
@@ -79,6 +109,56 @@
 
   .nav-link {
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+  }
+
+  .nav-bar--mobile-collapsed {
+    padding: 1.1rem 1.65rem;
+    gap: 0.35rem;
+  }
+
+  .nav-leading {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .nav-links--collapsible {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 0.35rem;
+    gap: 0.45rem;
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    overflow: hidden;
+    transition:
+      max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .nav-links--collapsible.nav-links--expanded {
+    max-height: 360px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .nav-links--collapsible .nav-link {
+    font-size: 0.85rem;
   }
 }
 
