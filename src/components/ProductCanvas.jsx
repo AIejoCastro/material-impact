@@ -10,9 +10,9 @@ import {
   Sparkles,
   Sphere,
   Torus,
-  useDetectGPU,
   useGLTF
 } from '@react-three/drei';
+import { getGPUTier } from 'detect-gpu';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { Color, MathUtils } from 'three';
@@ -75,6 +75,47 @@ function useMotionProfileRef(profile) {
     profileRef.current = profile;
   }, [profile]);
   return profileRef;
+}
+
+function useGpuTier(device, prefersReducedMotion) {
+  const [tier, setTier] = useState(() =>
+    prefersReducedMotion ? { tier: 0, isMobile: device.isMobile } : null
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (prefersReducedMotion) {
+      setTier({ tier: 0, isMobile: device.isMobile });
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    if (typeof window === 'undefined') {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    getGPUTier({ mobileBenchmarkPercentages: [0.5, 0.7, 0.9] })
+      .then((result) => {
+        if (!cancelled) {
+          setTier(result);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setTier({ tier: 1, isMobile: device.isMobile });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [prefersReducedMotion, device.isMobile]);
+
+  return tier;
 }
 
 function normalizePointer(event) {
@@ -721,8 +762,8 @@ const ENABLED_PRODUCT_MODELS = import.meta.env?.VITE_ENABLE_PRODUCT_MODELS === '
 
 function ProductCanvas({ slug, palette }) {
   const device = useDeviceState();
-  const gpuTier = useDetectGPU();
   const prefersReducedMotion = useReducedMotion();
+  const gpuTier = useGpuTier(device, prefersReducedMotion);
   const colors = palette ?? PALETTES[slug] ?? PALETTES.iphone;
   const qualityTier = useMemo(() => {
     if (prefersReducedMotion) return 'reduced';
