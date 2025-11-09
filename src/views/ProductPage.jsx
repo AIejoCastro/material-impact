@@ -3,53 +3,88 @@ import { Link } from 'react-router-dom';
 import ProductCanvas from '../components/ProductCanvas';
 import './ProductPage.css';
 
-const containerVariants = {
-  hidden: { opacity: 0, y: 60 },
+// Shared motion curve tuned for premium-feeling transitions.
+const BASE_EASE = [0.22, 0.61, 0.36, 1];
+
+// Hero transitions stagger softly to draw focus from headline to supporting data.
+const heroVariants = {
+  hidden: { opacity: 0, y: 54 },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      ease: 'easeOut',
-      duration: 0.9
+      ease: BASE_EASE,
+      duration: 0.85,
+      staggerChildren: 0.08,
+      delayChildren: 0.1
     }
+  }
+};
+
+const heroChildVariants = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { ease: BASE_EASE, duration: 0.6 } }
+};
+
+// Panels settle with a slight scale ease to feel anchored yet responsive.
+const panelVariants = {
+  hidden: { opacity: 0, y: 30, scale: 0.98 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { ease: BASE_EASE, duration: 0.6 }
   }
 };
 
 function ProductPage({ product }) {
   return (
     <section className="product" style={{ '--hero-color': product.palette.primary }}>
-      <motion.div className="product-hero" initial="hidden" animate="show" variants={containerVariants}>
-        <div className="product-hero__copy">
-          <p className="product-hero__category">{product.category}</p>
-          <h1>{product.name}</h1>
-          <p className="product-hero__headline">{product.headline}</p>
-          <div className="product-hero__stats">
-            <div>
-              <span>Waste Generated</span>
-              <strong>{product.stats.waste.value}</strong>
-              <p>{product.stats.waste.description}</p>
-            </div>
-            <div>
-              <span>People Involved</span>
-              <strong>{product.stats.labor.value}</strong>
-              <p>{product.stats.labor.description}</p>
-            </div>
-            <div>
-              <span>Creation Timeline</span>
-              <strong>{product.stats.time.value}</strong>
-              <p>{product.stats.time.description}</p>
-            </div>
-          </div>
-          <Link to="/" className="product-hero__back">
-            ← Back to explorer
-          </Link>
-        </div>
-        <motion.div
-          className="product-hero__visual"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2, duration: 0.8, ease: 'easeOut' }}
-        >
+      <motion.div className="product-hero" initial="hidden" animate="show" variants={heroVariants}>
+        <motion.div className="product-hero__copy" variants={heroChildVariants}>
+          <motion.p className="product-hero__category" variants={heroChildVariants}>
+            {product.category}
+          </motion.p>
+          <motion.h1 variants={heroChildVariants}>{product.name}</motion.h1>
+          <motion.p className="product-hero__headline" variants={heroChildVariants}>
+            {product.headline}
+          </motion.p>
+          <motion.div className="product-hero__stats" variants={heroChildVariants}>
+            {[
+              {
+                label: 'Waste Generated',
+                value: product.stats.waste.value,
+                description: product.stats.waste.description
+              },
+              {
+                label: 'People Involved',
+                value: product.stats.labor.value,
+                description: product.stats.labor.description
+              },
+              {
+                label: 'Creation Timeline',
+                value: product.stats.time.value,
+                description: product.stats.time.description
+              }
+            ].map((stat) => (
+              <motion.div
+                key={stat.label}
+                variants={heroChildVariants}
+                transition={{ ease: BASE_EASE, duration: 0.55 }}
+              >
+                <span>{stat.label}</span>
+                <strong>{stat.value}</strong>
+                <p>{stat.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+          <motion.div variants={heroChildVariants}>
+            <Link to="/" className="product-hero__back">
+              ← Back to explorer
+            </Link>
+          </motion.div>
+        </motion.div>
+        <motion.div className="product-hero__visual" variants={heroChildVariants}>
           <div className="product-hero__visual-scene">
             <ProductCanvas slug={product.slug} palette={product.palette} />
             <div className="product-hero__visual-gradient" />
@@ -59,11 +94,19 @@ function ProductPage({ product }) {
 
       <motion.div
         className="product-details"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
+        initial="hidden"
+        animate="show"
+        variants={{
+          hidden: {},
+          show: {
+            transition: {
+              staggerChildren: 0.14,
+              delayChildren: 0.3
+            }
+          }
+        }}
       >
-        <div className="product-details__panel">
+        <motion.div className="product-details__panel" variants={panelVariants}>
           <h2>Supply Chain Journey</h2>
           <ol>
             {product.supplyChain.map((step) => (
@@ -73,15 +116,15 @@ function ProductPage({ product }) {
               </li>
             ))}
           </ol>
-        </div>
-        <div className="product-details__panel product-details__panel--highlights">
+        </motion.div>
+        <motion.div className="product-details__panel product-details__panel--highlights" variants={panelVariants}>
           <h2>Impact Highlights</h2>
           <ul>
             {product.highlights.map((fact) => (
               <li key={fact}>{fact}</li>
             ))}
           </ul>
-        </div>
+        </motion.div>
       </motion.div>
     </section>
   );

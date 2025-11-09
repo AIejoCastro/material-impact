@@ -2,15 +2,57 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
 
+// Shared easing curve keeps motion language consistent across the experience.
+const BASE_EASE = [0.22, 0.61, 0.36, 1];
+
+const heroMotion = {
+  initial: { opacity: 0, y: 48, filter: 'blur(4px)' },
+  animate: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { ease: BASE_EASE, duration: 0.85 }
+  }
+};
+
+// Grid uses staggered entrance to cue scan direction.
+const gridMotion = {
+  animate: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.2
+    }
+  }
+};
+
+// Cards include subtle 3D hover states to reinforce depth without breaking layout.
+const cardMotion = {
+  initial: { opacity: 0, y: 26, rotateX: -6, scale: 0.98 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    scale: 1,
+    transition: { ease: BASE_EASE, duration: 0.6 }
+  },
+  whileHover: {
+    y: -10,
+    rotateX: 6,
+    rotateY: -4,
+    scale: 1.01,
+    transition: { ease: BASE_EASE, duration: 0.35 }
+  },
+  whileTap: {
+    scale: 0.99,
+    y: 0,
+    transition: { ease: BASE_EASE, duration: 0.25 }
+  }
+};
+
 function LandingPage({ products }) {
   return (
     <section className="landing">
-      <motion.div
-        className="landing-hero"
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-      >
+      <motion.div className="landing-hero" {...heroMotion}>
         <p className="landing-eyebrow">Material Impact Explorer</p>
         <h1>
           Untangle the hidden <span>human</span> and <span>planetary</span>{' '}
@@ -28,23 +70,15 @@ function LandingPage({ products }) {
         className="landing-grid"
         initial="initial"
         animate="animate"
-        variants={{
-          animate: {
-            transition: {
-              staggerChildren: 0.08
-            }
-          }
-        }}
+        variants={gridMotion}
       >
         {products.map((product) => (
           <motion.div
             key={product.slug}
             className="landing-card"
-            variants={{
-              initial: { opacity: 0, y: 30, rotateX: -8 },
-              animate: { opacity: 1, y: 0, rotateX: 0 }
-            }}
-            whileHover={{ y: -8, rotateX: 6, rotateY: -4 }}
+            variants={cardMotion}
+            whileHover={cardMotion.whileHover}
+            whileTap={cardMotion.whileTap}
           >
             <div
               className="landing-card__backdrop"
